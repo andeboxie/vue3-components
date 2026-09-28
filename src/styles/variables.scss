@@ -1,0 +1,28 @@
+/** 全局变量（颜色、字号、间距） */
+// 颜色
+$color-primary: #1677ff;
+$color-success: #00b42a;
+$color-warning: #ff7d00;
+$color-danger: #f53f3f;
+$color-default: #1d2129;
+$color-muted: #86909c;
+
+// 字号
+$font-size-small: 12px;
+$font-size-body: 14px;
+$font-size-lead: 16px;
+$font-size-title: 20px;
+
+// 间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+
+// 圆角
+$radius-sm: 2px;
+$radius-md: 4px;
+$radius-lg: 8px;
+
+// 过渡
+$transition-fast: 0.15s ease-in-out;

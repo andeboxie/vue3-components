@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "composite": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+        "target": "ES2023",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "lib": [
+            "ES2023"
+        ],
+        "types": [
+            "node"
+        ], // 需要 @types/node，没装先 pnpm add -D @types/node
+        "strict": true,
+        "skipLibCheck": true,
+        "allowImportingTsExtensions": true,
+        "moduleDetection": "force",
+        "noEmit": true,
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true
+    },
+    "include": [
+        "vite.config.ts",
+        "vitest.setup.ts"
+    ]
+}
