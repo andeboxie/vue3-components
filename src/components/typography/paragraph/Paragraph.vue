@@ -12,13 +12,13 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<ParagraphProps>(), {
-    level: ParagraphLevelEnum.BODY,
+    level: ParagraphLevelEnum.Body,
     component: 'p',
-    align: AlignStateEnum.LEFT,
+    align: AlignStateEnum.Left,
     truncate: false,
     strong: false,
     italic: false,
-    color: TextColorEnum.DEFAULT,
+    color: TextColorEnum.Default,
     size: '1em',
 });
 

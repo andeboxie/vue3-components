@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type ButtonProps from "@/components/button/ButtonProps";
+import type ButtonEmits from "@/emits/ButtonEmits";
 import VisualStyleStateEnum from "@/enums/VisualStyleStateEnum";
 import SizeStateEnum from "@/enums/SizeStateEnum";
 import NativeTypeEnum from "@/enums/NativeTypeEnum";
 import { computed } from "vue";
+
 
 // 定义组件选项：用 defineOptions()
 defineOptions({
@@ -20,8 +22,8 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   block: false,
 });
 
-// 定义 emits：用 defineEmits<{ click: [e: MouseEvent] }>()
-const emit = defineEmits<{ click: [e: MouseEvent] }>();
+// 定义 emits
+const emit = defineEmits<ButtonEmits<MouseEvent>>();
 function handleClick(e: MouseEvent) {
   if (props.disabled || props.loading) {
     return;

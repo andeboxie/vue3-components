@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<IconProps>(), {
   color: 'currentColor',
   spin: false,
   ariaLabel: undefined,
-  mode: SvgModeStateEnum.SINGLE,
+  mode: SvgModeStateEnum.Single,
 });
 
 const iconClasses = computed(() => {

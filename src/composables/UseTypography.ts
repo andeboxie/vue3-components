@@ -6,6 +6,16 @@ import type { TextColor } from "@/enums/TextColorEnum";
 const alignValues = Object.values(AlignStateEnum);
 const colorValues = Object.values(TextColorEnum);
 
+/**
+ * 用于生成 Typography 组件的 class 名
+ * @param prefix 组件前缀
+ * @param align 对齐状态
+ * @param truncate 是否截断
+ * @param strong 是否加粗
+ * @param italic 是否斜体
+ * @param color 文字颜色
+ * @returns class 名数组
+ */
 export function useTypography(
     prefix: string,
     align?: AlignState,

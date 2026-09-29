@@ -12,13 +12,13 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<TextProps>(), {
-    level: TextLevelEnum.BODY,
+    level: TextLevelEnum.Body,
     component: 'span',
-    align: AlignStateEnum.LEFT,
+    align: AlignStateEnum.Left,
     truncate: false,
     strong: false,
     italic: false,
-    color: TextColorEnum.DEFAULT,
+    color: TextColorEnum.Default,
     size: '1em',
 });
 

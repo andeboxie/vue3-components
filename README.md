@@ -41,6 +41,7 @@ docs/
 | VcButton | 测试通过（T-01 ~ T-18） | `docs/stage-1-atomic/Button.spec.md` |
 | Typography | 测试通过（VcTitle / VcText / VcParagraph） | `docs/stage-1-atomic/Typography.spec.md` |
 | Icon | 测试通过 | `docs/stage-1-atomic/Icon.spec.md` |
+| VcInput | 测试通过（T-01 ~ T-22） | `docs/stage-2-form/Input.spec.md` |
 
 ## 约定
 

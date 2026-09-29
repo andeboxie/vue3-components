@@ -1,10 +1,10 @@
 const TextColorEnum = {
-    DEFAULT: 'default',
-    PRIMARY: 'primary',
-    SUCCESS: 'success',
-    WARNING: 'warning',
-    DANGER: 'danger',
-    MUTED: 'muted',
+    Default: 'default',
+    Primary: 'primary',
+    Success: 'success',
+    Warning: 'warning',
+    Danger: 'danger',
+    Muted: 'muted',
 } as const;
 
 // 导出类型定义：确保在类型检查中使用 TextColorEnum 中的值

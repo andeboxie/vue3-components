@@ -15,15 +15,15 @@
 
 ## 2.2 组件清单与推荐完成顺序
 
-| 序号 | 组件 | spec 文件 | 难度 | 学到的能力 |
-|---|---|---|---|---|
-| 1 | Input | Input.spec.md | 易 | v-model / 输入事件 / 清空 / 禁用 / 长度限制 |
-| 2 | Textarea | Textarea.spec.md | 易 | 多行输入 / 自适应高度 / 行数限制 |
-| 3 | Checkbox | Checkbox.spec.md | 中 | checked 状态 / 不确定态 / 组选中 |
-| 4 | Radio | Radio.spec.md | 中 | 单选互斥 / RadioGroup 协调 |
-| 5 | Switch | Switch.spec.md | 易 | 开关切换 / 加载态 |
-| 6 | Select | Select.spec.md | 难 | 下拉面板 / 选项选中 / 键盘导航 |
-| 7 | Form | Form.spec.md | 难 | 表单校验 / 提交 / 字段聚合 |
+| 序号 | 组件 | spec 文件 | 难度 | 学到的能力 | 状态 |
+|---|---|---|---|---|---|
+| 1 | Input | Input.spec.md | 易 | v-model / 输入事件 / 清空 / 禁用 / 长度限制 | 测试通过（T-01 ~ T-22） |
+| 2 | Textarea | Textarea.spec.md | 易 | 多行输入 / 自适应高度 / 行数限制 | 待实现 |
+| 3 | Checkbox | Checkbox.spec.md | 中 | checked 状态 / 不确定态 / 组选中 | 待实现 |
+| 4 | Radio | Radio.spec.md | 中 | 单选互斥 / RadioGroup 协调 | 待实现 |
+| 5 | Switch | Switch.spec.md | 易 | 开关切换 / 加载态 | 待实现 |
+| 6 | Select | Select.spec.md | 难 | 下拉面板 / 选项选中 / 键盘导航 | 待实现 |
+| 7 | Form | Form.spec.md | 难 | 表单校验 / 提交 / 字段聚合 | 待实现 |
 
 **建议按顺序做**：Input 是基础，Textarea 是变体，Checkbox/Radio 引入选中态，Switch 最简单，Select 最复杂（面板+键盘），Form 最后做整合。
 

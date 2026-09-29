@@ -1,7 +1,7 @@
 const ParagraphLevelEnum = {
-    BODY: 'body',
-    LEAD: 'lead',
-    SMALL: 'small',
+    Body: 'body',
+    Lead: 'lead',
+    Small: 'small',
 } as const;
 
 // 可选：导出值类型的 union，方便在 props 类型里用 

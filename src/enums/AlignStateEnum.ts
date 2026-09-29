@@ -1,7 +1,7 @@
 const AlignStateEnum = {
-    LEFT: 'left',
-    CENTER: 'center',
-    RIGHT: 'right',
+    Left: 'left',
+    Center: 'center',
+    Right: 'right',
 } as const;
 // 可选：导出值类型的 union，方便在 props 类型里用 
 type AlignState = (typeof AlignStateEnum)[keyof typeof AlignStateEnum];

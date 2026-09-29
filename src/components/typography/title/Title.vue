@@ -13,11 +13,11 @@ defineOptions({
 
 const props = withDefaults(defineProps<TitleProps>(), {
     level: TitleLevelEnum.H1,
-    align: AlignStateEnum.LEFT,
+    align: AlignStateEnum.Left,
     truncate: false,
     strong: false,
     italic: false,
-    color: TextColorEnum.DEFAULT,
+    color: TextColorEnum.Default,
     size: '1em',
 });
 
