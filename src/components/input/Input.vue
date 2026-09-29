@@ -3,8 +3,12 @@ import type InputProps from '@/components/input/InputProps';
 import type InputEmits from '@/emits/InputEmits';
 import SizeStateEnum from '@/enums/SizeStateEnum';
 import InputTypeEnum from '@/enums/InputTypeEnum';
-import { getInputValue, getValue } from '@/utils/Event';
+import { useInputEvents } from '@/composables/UseInputEvents';
 import { useFormControl } from '@/composables/UseFormControl';
+
+defineOptions({
+    name: "VcInput",
+});
 
 const props = withDefaults(defineProps<InputProps>(), {
     modelValue: '',
@@ -18,45 +22,9 @@ const props = withDefaults(defineProps<InputProps>(), {
 
 const emit = defineEmits<InputEmits<string>>();
 
-function handleUpdateValue(value: string) {
-    emit('update:modelValue', value);
-}
+const { handleInput, handleBlur, handleFocus, handleClear, handleChange } = useInputEvents(emit as (event: string, ...args: unknown[]) => void, props);
 
-function handleInput(e: InputEvent) {
-    if (props.disabled || props.readonly) {
-        return; 
-    }
-    handleUpdateValue(getInputValue(e));
-}
 
-function handleBlur(e: FocusEvent) {
-    if (props.disabled) {
-        return; 
-    }
-    emit('blur', e);
-}
-
-function handleFocus(e: FocusEvent) {
-    if (props.disabled) {
-        return; 
-    }
-    emit('focus', e);
-}
-
-function handleClear(e: FocusEvent) {
-    if (props.disabled || props.readonly) {
-         return; 
-    }
-    handleUpdateValue('');
-    emit('clear', e);
-}
-
-function handleChange(e: Event) {
-    if (props.disabled || props.readonly) {
-         return; 
-    }
-    emit('change', getValue(e));
-}
 
 const inputClasses = useFormControl('vc-input', props.size);
 

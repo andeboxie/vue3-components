@@ -127,6 +127,9 @@
 | T-14 | B-14 | 触发 focus / blur | 取 emitted | 有对应事件 | P0 |
 | T-15 | B-15 | 改值后 blur | 取 emitted change | 载荷为新值 | P1 |
 | T-16 | E-02 | `{ clearable: true, readonly: true, modelValue: 'x' }` | 找清空按钮 | 不存在 | P1 |
+| T-17 | E-03 | `{ rows: 0 }` | 取 textarea rows | 为 `'1'` | P2 |
+| T-18 | A-02 | `{ clearable: true, modelValue: 'x' }` | 取清空按钮 aria-label | 为 `'清空'` | P1 |
+| T-19 | - | `{ autosize: false }` | 取 textarea style.height | 为空字符串 | P2 |
 
 ---
 
