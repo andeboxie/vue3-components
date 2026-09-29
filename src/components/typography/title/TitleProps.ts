@@ -2,5 +2,5 @@ import type TypographyChildrenProps from '@/components/typography/TypographyChil
 import type { TitleLevel } from '@/enums/TitleLevelEnum';
 
 export default interface TitleProps extends TypographyChildrenProps {
-    level: TitleLevel;
+    level?: TitleLevel;
 }
