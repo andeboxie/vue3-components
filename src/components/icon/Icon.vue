@@ -2,7 +2,8 @@
 import type IconProps from "@/components/icon/IconProps";
 import { computed } from "vue";
 import { useIcon } from "@/components/icon/UseIcon";
-import { useSizableStyle } from "@/composables/useSizableStyle";
+import { useSizableStyle } from "@/composables/UseSizableStyle";
+import SvgModeStateEnum from "@/enums/SvgModeStateEnum";
 
 
 
@@ -15,7 +16,7 @@ const props = withDefaults(defineProps<IconProps>(), {
   color: 'currentColor',
   spin: false,
   ariaLabel: undefined,
-  mode: 'single',
+  mode: SvgModeStateEnum.SINGLE,
 });
 
 const iconClasses = computed(() => {

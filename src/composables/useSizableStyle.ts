@@ -8,14 +8,14 @@ import { computed, toValue, type ComputedRef, type CSSProperties, type MaybeRefO
  * @returns 包含 fontSize 与 color 的 computed style 对象
  */
 export function useSizableStyle(
-    size: MaybeRefOrGetter<number | string>,
-    color: MaybeRefOrGetter<string>,
+    size?: MaybeRefOrGetter<number | string>,
+    color?: MaybeRefOrGetter<string>,
 ): ComputedRef<CSSProperties> {
     return computed(() => {
         const s = toValue(size);
         return {
-            fontSize: typeof s === 'number' ? `${s}px` : s,
-            color: toValue(color),
+            fontSize: s ? typeof s === 'number' ? `${s}px` : s : '',
+            color: color ? toValue(color) : '',
         };
     });
 }

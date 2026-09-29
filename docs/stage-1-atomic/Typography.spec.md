@@ -36,6 +36,7 @@
 | `strong` | `boolean` | `false` | 否 | 加粗（class 加 `vc-xxx--strong`） |
 | `italic` | `boolean` | `false` | 否 | 斜体（class 加 `vc-xxx--italic`） |
 | `color` | `'default' \| 'primary' \| 'success' \| 'warning' \| 'danger' \| 'muted'` | `'default'` | 否 | 文本颜色 class |
+| `size` | `number \| string` | `'1em'` | 否 | 字号，number 时按 px 处理，string 时原样作为 CSS `font-size`（扩展项，原 spec 未列出） |
 
 ### VcTitle（标题）
 
@@ -203,7 +204,7 @@ const defaultTag = computed(() => {
 
 - 三个组件的 props 重复度高，可考虑用 TypeScript 工厂函数生成 props 定义
 - `levelToTagMap` 集中到 `types.ts`，便于将来增加 level
-- 如未来要支持响应式字号，预留 `size` prop（本阶段不实现）
+- 如未来要支持响应式字号，预留 `size` prop（已实现为扩展项，三组件均已加入 `size` prop + `useSizableStyle` composable）
 
 ---
 
