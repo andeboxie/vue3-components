@@ -34,11 +34,12 @@
 
 | 名称 | 类型 | 默认值 | 必填 | 行为说明 |
 |---|---|---|---|---|
-| `name` | `string` | - | 是 | 图标名，对应 `src/components/icon/icons/{name}.svg` 的文件名（不含扩展名）|
-| `size` | `number \| string` | `'1em'` | 否 | 图标尺寸，传 number 时按 px 处理，传 string 时原样作为 CSS `width`/`height` |
+| `name` | `string` | - | 是 | 图标名，对应 `src/assets/icons/{name}.svg` 的文件名（不含扩展名）|
+| `size` | `number \| string` | `'1em'` | 否 | 图标尺寸，传 number 时按 px 处理，传 string 时原样作为 CSS `font-size` |
 | `color` | `string` | `'currentColor'` | 否 | 图标颜色，CSS `color` 值，SVG 内部 `fill="currentColor"` |
 | `spin` | `boolean` | `false` | 否 | 为 `true` 时图标无限旋转（class `vc-icon--spin`） |
 | `ariaLabel` | `string \| undefined` | `undefined` | 否 | 装饰图标传 `undefined`，语义图标传字符串作为 `aria-label` |
+| `mode` | `'single' \| 'multi'`（由 `SvgModeStateEnum` 派生） | `'single'` | 否 | 预留：单色/多色模式。本阶段仅支持 `'single'`（`currentColor`），`'multi'` 行为未实现 |
 
 ### Emits
 
@@ -131,8 +132,10 @@
 Vue3 + Vite 推荐用 Vite 的 `import.meta.glob` 加载所有 SVG：
 
 ```ts
-// 伪代码，仅说明思路
-const modules = import.meta.glob('./icons/*.svg', {
+// 伪代码，仅说明思路（路径相对 SVG 加载模块所在目录；
+// 实际放在 src/composables 或 src/components/icon 下的 composable，
+// 指向 src/assets/icons/，故为 '../../assets/icons/*.svg'）
+const modules = import.meta.glob('../../assets/icons/*.svg', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -147,7 +150,7 @@ const modules = import.meta.glob('./icons/*.svg', {
 
 ### 2. 测试时如何准备 SVG
 
-在 `src/components/icon/icons/` 下放一个 `check.svg`：
+在 `src/assets/icons/` 下放一个 `check.svg`：
 
 ```xml
 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>

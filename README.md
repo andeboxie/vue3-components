@@ -38,9 +38,9 @@ docs/
 
 | 组件 | 状态 | 规格 |
 |---|---|---|
-| VcButton | 测试全绿（T-01 ~ T-18） | `docs/stage-1-atomic/Button.spec.md` |
-| Typography | 未开始 | `docs/stage-1-atomic/Typography.spec.md` |
-| Icon | 未开始 | `docs/stage-1-atomic/Icon.spec.md` |
+| VcButton | 测试通过（T-01 ~ T-18） | `docs/stage-1-atomic/Button.spec.md` |
+| Typography | 测试通过（VcTitle / VcText / VcParagraph） | `docs/stage-1-atomic/Typography.spec.md` |
+| Icon | 测试通过 | `docs/stage-1-atomic/Icon.spec.md` |
 
 ## 约定
 
@@ -51,5 +51,5 @@ docs/
 
 ## 已知事项
 
-- 根 `tsconfig.json` 为 solution-style（`files: []`），`pnpm type-check` 目前不检查任何文件；真实检查命令为 `npx vue-tsc --noEmit -p tsconfig.app.json`（后续将脚本调整为 `vue-tsc -b`）
+- 根 `tsconfig.json` 为 solution-style（`files: []` + `references`），`type-check` / `build` 脚本已统一用 `vue-tsc -b`（build 模式走 references），`--noEmit` 直接跑会是空检查，不要回退
 - TypeScript 6.0 已将 `baseUrl` 列为硬性弃用错误（TS5101），路径别名只配置 `paths`（相对 tsconfig 所在目录解析）

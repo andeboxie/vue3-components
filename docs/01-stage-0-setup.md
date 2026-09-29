@@ -28,24 +28,27 @@ pnpm -v
 
 ### 0.2.2 开发依赖（devDependencies）
 
-| 包                           | 版本    | 用途                                   |
-| --------------------------- | ----- | ------------------------------------ |
-| `@vitejs/plugin-vue`        | ^5.x  | 让 Vite 能编译 `.vue` 文件                 |
-| `vue-tsc`                   | ^2.x  | 对 `.vue` 做 TS 类型检查（替代 tsc 用于 build）  |
-| `vitest`                    | ^2.x  | 测试框架，与 Vite 共享配置                     |
-| `@vue/test-utils`           | ^2.x  | Vue3 官方组件挂载与断言工具                     |
-| `@testing-library/vue`      | ^8.x  | （可选）更接近用户行为的查询方式                     |
-| `jsdom`                     | ^25.x | 在 Node 里提供 DOM 环境                    |
-| `@testing-library/jest-dom` | ^6.x  | 提供 `toBeVisible`、`toHaveClass` 等断言扩展 |
-| `sass`                      | ^1.x  | 写组件样式（可选，也可纯 CSS）                    |
+| 包                           | 版本      | 用途                                   |
+| --------------------------- | ------- | ------------------------------------ |
+| `vite`                      | ^8.3.0  | 构建工具本体（Vite 8 要求 Node 20+）           |
+| `@vitejs/plugin-vue`        | ^6.0.9  | 让 Vite 能编译 `.vue` 文件                 |
+| `typescript`                | ~6.0.2  | TS 编译器本体（6.x 把 `baseUrl` 列为硬性弃用错误）  |
+| `vue-tsc`                   | ^3.3.11 | 对 `.vue` 做 TS 类型检查（替代 tsc 用于 build）  |
+| `vitest`                    | ^5.0.2  | 测试框架，与 Vite 共享配置                     |
+| `@vue/test-utils`           | ^2.5.1  | Vue3 官方组件挂载与断言工具                     |
+| `jsdom`                     | ^30.1.1 | 在 Node 里提供 DOM 环境                    |
+| `@testing-library/jest-dom` | ^7.0.1  | 提供 `toBeVisible`、`toHaveClass` 等断言扩展 |
+| `@types/node`               | ^26.6.3 | Node 类型声明（tsconfig.node.json 需要）     |
+| `sass`                      | ^1.105.0 | 写组件样式（可选，也可纯 CSS）                   |
 
-> 版本号请以安装时最新稳定版为准；上面给的是兼容大版本范围。
+> 上表为阶段 0/1 实际锁定版本。新机器安装以最新稳定版为准，但注意 vite 8 / vitest 5 / vue-tsc 3 / TS 6 的大版本组合已验证可跑通。
+> `@testing-library/vue` 原列"可选"，实际未安装，本库测试全程用 `@vue/test-utils`，无需引入。
 
 ### 0.2.3 安装命令（参考）
 
 ```powershell
 pnpm add vue
-pnpm add -D @vitejs/plugin-vue vue-tsc vitest @vue/test-utils jsdom @testing-library/jest-dom sass
+pnpm add -D vite typescript @vitejs/plugin-vue vue-tsc vitest @vue/test-utils jsdom @testing-library/jest-dom @types/node sass
 ```
 
 ***
@@ -65,25 +68,40 @@ export default defineConfig({
 
 ### 0.3.2 `tsconfig.json` 改造
 
-当前 `tsconfig.json` 缺少 Vue3 所需配置。改造方向（具体写法你来定）：
+当前 `tsconfig.json` 缺少 Vue3 所需配置。改造方向（本库已采用手写路线，未引入 `@vue/tsconfig`）：
 
 - `include` 加入 `src/**/*.vue`
 - `compilerOptions.types` 加入 `"vitest/globals"`（如使用全局 API）
-- 添加 `@vue/tsconfig` 或手写以下选项：
+- 手写以下选项：
   - `"jsx": "preserve"`
   - `"jsxImportSource": "vue"`
   - `"lib": ["ES2023", "DOM", "DOM.Iterable"]`
   - `"verbatimModuleSyntax": true`（保留）
-- 拆分 `tsconfig.app.json` 与 `tsconfig.node.json`（Vite 8 模板惯例，可选）
+- 拆分 `tsconfig.app.json`（浏览器环境代码）与 `tsconfig.node.json`（Node 环境配置文件），根 `tsconfig.json` 改为 solution-style：
+  ```json
+  {
+    "files": [],
+    "references": [
+      { "path": "./tsconfig.app.json" },
+      { "path": "./tsconfig.node.json" }
+    ]
+  }
+  ```
+
+**硬性约束（TS 6.0 踩坑沉淀）**：
+
+- **不要写 `baseUrl`**。TS 6.0 把 `baseUrl` 列为硬性弃用错误（TS5101），直接报红。`paths` 在 TS 4.1+ 已支持相对 `tsconfig` 所在目录解析，无需 `baseUrl` 锚定。
+- 因为根 `tsconfig.json` 是 solution-style（`files: []` + `references`），`vue-tsc --noEmit` 直接跑会变成**空检查**（不读 references）。所以 `type-check` / `build` 脚本必须用 `vue-tsc -b`（build 模式走 references），详见 0.3.5。
+- `tsconfig.app.json` 与 `tsconfig.node.json` 都需设 `"composite": true`（被 references 引用的前提），并各自配 `"tsBuildInfoFile"` 指向 `node_modules/.tmp/` 下，避免污染源码目录。
 
 ### 0.3.3 `vitest.config.ts`（与 vite.config 合并或单独）
 
-推荐与 vite 配置合并：
+推荐与 vite 配置合并，直接写在 `vite.config.ts` 里。注意从 `vitest/config` 导入 `defineConfig`（类型已内置，无需 `/// <reference types="vitest" />`），并加 `resolve.alias` 与 `tsconfig` 的 `paths` 对齐：
 
 ```ts
-/// <reference types="vitest" />
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
+import path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
@@ -92,8 +110,16 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
 })
 ```
+
+> 说明：0.3.1 的最简 `vite.config.ts` 是 dev 起步用；一旦接入 vitest，直接合并成上面这份即可，不再保留两份配置。
+> 测试文件里若用 `@/` 别名，vitest 的 glob 路径 key 偶尔会出现大小写/格式不一致，建议测试用相对路径导入组件，`@/` 仅用于非 glob 场景。
 
 ### 0.3.4 `vitest.setup.ts`（项目根目录新建）
 
@@ -104,20 +130,22 @@ import '@testing-library/jest-dom'
 
 ### 0.3.5 `package.json` 脚本
 
-替换 `scripts`：
+替换 `scripts`（注意 `type-check` / `build` 用 `vue-tsc -b`，不是 `--noEmit`）：
 
 ```json
 {
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc -b"
   }
 }
 ```
+
+> 为什么用 `-b`：根 `tsconfig.json` 是 solution-style（`files: []` + `references`），`--noEmit` 直接跑不读 references，等于空检查。`-b` 走 build 模式才会真正检查 `tsconfig.app.json` / `tsconfig.node.json` 引用链。若想手动单查 app 配置，可用 `npx vue-tsc --noEmit -p tsconfig.app.json`。
 
 ***
 
@@ -264,4 +292,9 @@ describe('环境自检', () => {
 - **`@use`** **与** **`@import`** **混用**：dart-sass 推荐用 `@use`，`@import` 已废弃但仍能用，混用会导致同名变量被多次声明报错
 - **scoped 样式里的变量报"未定义"**：scoped 不影响 `@use` 引用全局变量，但要确保 `variables.scss` 文件路径正确，且用 `as *` 别名引入
 - **BEM 前缀忘加**：组件 class 没加 `vc-` 前缀，使用方覆盖样式时会与自身代码冲突
+- **Vetur 扩展接管 .vue**：IDE 若装了 Vetur（Vue2 扩展），会接管 `.vue` 导致 `@/` 别名在 `.vue` 里报 `Cannot find module`（相对路径正常、`.ts` 正常、CLI 正常）。需禁用 Vetur，改装官方 Vue - Official (Volar) 扩展
+- **TS 6.0 写了 `baseUrl`**：TS 6.0 把 `baseUrl` 列为硬性弃用错误（TS5101），直接报红。删掉 `baseUrl`，`paths` 相对 tsconfig 所在目录解析即可
+- **solution-style tsconfig 跑 `--noEmit` 是空检查**：根 `tsconfig.json` 为 `files: []` + `references` 时，`vue-tsc --noEmit` 不读 references，等于没检查。脚本必须用 `vue-tsc -b`，详见 0.3.2 / 0.3.5
+- **用了编译器宏却写普通 `<script lang="ts">`**：组件里用了 `defineProps` / `withDefaults` / `defineOptions` 等编译器宏，却用普通 `<script lang="ts">` 块，会报"类型上不存在属性 xxx"。必须改用 `<script setup lang="ts">`，约定见总指南第四节
+- **Vitest 下 `@/` 别名的 glob 路径 key 不一致**：测试文件用 `@/` 导入时，vitest 的 glob 路径 key 偶尔出现大小写/格式不一致。建议测试用相对路径导入组件，`@/` 仅用于非 glob 场景
 

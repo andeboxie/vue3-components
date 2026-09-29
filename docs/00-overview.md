@@ -63,7 +63,7 @@ docs/
 │   ├── Button.spec.md                # 单组件规格
 │   ├── Icon.spec.md
 │   └── Typography.spec.md
-├── stage-2-form/                     # 第 2 阶段：表单类（完成阶段 1 后再生成）
+├── stage-2-form/                     # 第 2 阶段：表单类（spec 已交付）
 ├── stage-3-display/                 # 第 3 阶段：数据展示类
 └── stage-4-layout-feedback/         # 第 4 阶段：布局与反馈类
 ```
@@ -164,7 +164,17 @@ src/
 - Props 用 `camelCase`，模板里用 `kebab-case`
 - Emits 用 `kebab-case`（如 `click`、`update:modelValue`）
 
-### 4.3 测试文件位置
+### 4.3 `<script>` 块约定
+
+组件统一使用 `<script setup lang="ts">`，不要用普通 `<script lang="ts">` 块来调用编译器宏。
+
+**硬性约束（阶段 1 踩坑沉淀）**：
+
+- 凡是使用 `defineProps` / `defineEmits` / `withDefaults` / `defineOptions` / `defineSlots` / `defineModel` 等 `<script setup>` 编译器宏，或希望在模板里直接访问顶层变量，**必须**用 `<script setup lang="ts">`。
+- 若误用普通 `<script lang="ts">` 块调用上述宏，会报"类型上不存在属性 'xxx'"（宏不会被编译器展开，顶层变量也不会暴露给模板）。
+- 仅当确实需要"普通 `<script>` + `<script setup>` 并存"的特殊场景（如运行时 options 配合 setup），才允许二者并存；此时编译器宏仍只能写在 `<script setup>` 内。
+
+### 4.4 测试文件位置
 
 测试文件与组件文件**同目录、同名**，便于查找。
 
@@ -249,13 +259,13 @@ it('T-01: type=primary 时根元素含 vc-button--primary', () => {
 
 | 阶段 | 主题 | 组件（建议） | 状态 |
 |---|---|---|---|
-| 0 | 环境搭建 | - | 待你执行 |
-| 1 | 基础原子 | Button / Icon / Typography | spec 已交付 |
-| 2 | 表单类 | Input / Textarea / Checkbox / Radio / Switch / Select / Form | 待生成 |
+| 0 | 环境搭建 | - | 已完成 |
+| 1 | 基础原子 | Button / Icon / Typography | 已完成（51/51 测试通过） |
+| 2 | 表单类 | Input / Textarea / Checkbox / Radio / Switch / Select / Form | spec 已交付，待实现 |
 | 3 | 数据展示 | Tag / Badge / Avatar / Card / Empty / Table / Tooltip | 待生成 |
 | 4 | 布局与反馈 | Layout / Container / Grid / Dialog / Drawer / Message / Toast / Loading | 待生成 |
 
-完成阶段 1 后告诉我，我会：
+完成阶段 2 后告诉我，我会：
 1. 按你的实现 + 测试做 review，给出点评
-2. 生成阶段 2 的 spec 文档
+2. 生成阶段 3 的 spec 文档
 

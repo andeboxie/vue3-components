@@ -4,7 +4,7 @@
 
 | 字段 | 值 |
 |---|---|
-| 组件名 | `VcTypography`（容器）+ 子组件 `VcTitle` / `VcText` / `VcParagraph` |
+| 组件名 | `VcTypography`（聚合容器，组合渲染三子组件）+ 子组件 `VcTitle` / `VcText` / `VcParagraph` |
 | 分类 | 基础原子 |
 | 所属阶段 | Stage-1 |
 | 依赖组件 | 无 |
@@ -18,6 +18,8 @@
 提供一套排版组件，封装语义化 HTML（h1-h5 / p / span）与字号 / 行高 / 颜色的预设。
 
 **为什么是一个 spec 涵盖多个组件**：Title / Text / Paragraph 共享一致的"level → 标签 + 样式"映射机制，放在一起设计才能保证一致性。
+
+**`VcTypography` 聚合容器的角色**：`VcTypography` 不是纯导出入口，而是在模板内**组合渲染** `VcTitle` / `VcParagraph` / `VcText` 三个子组件，并通过三个具名 slot（`title` / `paragraph` / `text`）把内容分别转发给对应子组件的 default slot。它本身不额外包裹根元素（Vue3 fragment）。子组件也可独立使用，不强制经过 `VcTypography`。
 
 **不解决**：富文本编辑、HTML 安全转义（用户输入由调用方负责）、中英文混排微调。
 
@@ -62,9 +64,19 @@
 
 ### Slots
 
+**子组件（VcTitle / VcText / VcParagraph）**
+
 | 名称 | 说明 |
 |---|---|
 | `default` | 文本内容 |
+
+**聚合容器 VcTypography**
+
+| 名称 | 说明 |
+|---|---|
+| `title` | 渲染进 `VcTitle` 的内容（转发到 VcTitle 的 default slot） |
+| `paragraph` | 渲染进 `VcParagraph` 的内容（转发到 VcParagraph 的 default slot） |
+| `text` | 渲染进 `VcText` 的内容（转发到 VcText 的 default slot） |
 
 ### Expose
 
@@ -99,6 +111,19 @@
 ### 通用性
 
 - **B-14** 三个子组件都遵守相同的修饰符语义（align/truncate/strong/italic/color），class 命名前缀随组件变化
+
+### 字号（扩展项，对应共通 Props 表的 `size`）
+
+- **B-15** `size` 为 number `16` 时，根元素 `style.font-size` 为 `'16px'`（三组件一致，由 `useSizableStyle` 统一计算）
+- **B-16** `size` 为 string `'2rem'` 时，根元素 `style.font-size` 原样为 `'2rem'`（三组件一致）
+- **B-17** `size` 不传时，根元素 `style.font-size` 为默认 `'1em'`
+
+### 聚合容器（VcTypography）
+
+- **B-18** `VcTypography` 渲染时同时挂载 `VcTitle` / `VcParagraph` / `VcText` 三个子组件
+- **B-19** `VcTypography` 提供三个具名 slot（`title` / `paragraph` / `text`），分别转发给对应子组件的 default slot
+- **B-20** `VcTypography` 不额外包裹根元素（Vue3 fragment，三子组件直接平铺为多根节点）
+- **B-21** 未传某具名 slot 时，对应子组件内部为空（遵循 B-13），不报错
 
 ---
 
@@ -160,6 +185,18 @@
 | T-18 | E-03 | mount VcTitle，props `{ align: 'xxx' as any }` | 取 class | 不含 `vc-title--xxx`，不报错 | P1 |
 | T-19 | E-04 | mount VcText，props `{ color: 'xxx' as any }` | 取 class | 不含 `vc-text--xxx`，不报错 | P1 |
 | T-20 | A-01 | mount VcTitle，props `{ level: 4 }` | 取根元素 | tagName 为 `H4`（不能是 div role=heading）| P0 |
+| T-21 | B-15 | mount VcText，props `{ size: 16 }` | 取 `style.font-size` | 为 `'16px'` | P1 |
+| T-22 | B-16 | mount VcText，props `{ size: '2rem' }` | 取 `style.font-size` | 为 `'2rem'` | P1 |
+| T-23 | B-17 | mount VcText（不传 size） | 取 `style.font-size` | 为 `'1em'` | P1 |
+
+### 聚合容器 VcTypography
+
+| 编号 | 关联行为 | Given | When | Then | 优先级 |
+|---|---|---|---|---|---|
+| T-24 | B-18 | mount VcTypography | 查找三子组件根元素 | 同时存在 title（h*）/ paragraph（p）/ text（span） | P1 |
+| T-25 | B-19 | mount VcTypography，slots `{ title: 'T', paragraph: 'P', text: 'X' }` | 取各子组件文本 | 分别含 `'T'` / `'P'` / `'X'` | P1 |
+| T-26 | B-20 | mount VcTypography | 取根元素 | 无额外包裹元素，三子组件直接平铺（fragment） | P2 |
+| T-27 | B-21 | mount VcTypography（不传任何 slot） | 取各子组件文本 | 均为空字符串，不报错 | P1 |
 
 ---
 
@@ -172,7 +209,7 @@ src/components/typography/
 ├── Title.vue
 ├── Text.vue
 ├── Paragraph.vue
-├── Typography.vue          # 仅做导出聚合（可选）
+├── Typography.vue          # 聚合容器：组合渲染 VcTitle/VcParagraph/VcText + 三具名 slot（非纯导出）
 ├── types.ts                # 共享类型与 level 映射
 └── use-typography.ts       # 共享 class 计算 composable
 ```
@@ -215,3 +252,4 @@ const defaultTag = computed(() => {
 - [ ] 标签始终用语义化 HTML（h1-h5、p、span）
 - [ ] level 越界时不报错
 - [ ] 共享 composable 抽出，三个组件无重复 class 计算代码
+- [ ] VcTypography 聚合容器正确转发三具名 slot（title / paragraph / text），未传 slot 时对应子组件为空
