@@ -125,6 +125,10 @@
 | T-11 | B-12 | `{ disabled: true }`，点击 | 取 emitted | 无事件 | P0 |
 | T-12 | B-13 | `{ disabled: true }` | 取 class | 含 `--disabled` | P1 |
 | T-13 | B-16 | `{ size: 'large' }` | 取 class | 含 `vc-checkbox--large` | P1 |
+| T-14 | B-02 | mount | 查找 | 存在 `vc-checkbox__inner` 节点 | P2 |
+| T-15 | B-14 | Group 中放 VcCheckbox `{ value: 'a' }`，点击子项 | 取 Group emitted | `update:modelValue` 载荷为 `['a']` | P1 |
+| T-16 | B-15 | Group `{ disabled: true }`，子 VcCheckbox | 取子 input disabled | 存在 | P1 |
+| T-17 | E-02 | Group 中放 VcCheckbox 无 value，点击 | 取 Group emitted | 无 `update:modelValue` | P2 |
 
 ---
 

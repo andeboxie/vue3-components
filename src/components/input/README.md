@@ -219,3 +219,4 @@
 | 0.0.0 | 2026-09-29 | 初始空框架 |
 | 0.1.0 | 2026-09-29 | 按 spec 填充全部章节；实现完成，22/22 测试通过 |
 | 0.2.0 | 2026-09-29 | P0/P1 修复：补根容器 div + `inputClasses`、补 type/placeholder/readonly/maxlength/disabled 透传、`modelValue ?? ''`、`clearable` 默认值改 false、prefix/suffix slot 优先、`change` 载荷改 string、disabled/readonly 事件守卫；class 抽为 `useFormControl` composable；删除未用的 `getFocusValue` import |
+| 0.3.0 | 2026-09-29 | 重构：抽 `useInputEvents` composable 共享 5 个事件 handler（handleInput / handleBlur / handleFocus / handleClear / handleChange），与 Textarea 复用；调用处传 `props` 对象保证 disabled / readonly 响应式访问；删除 `Event.ts` 中死代码 `getFocusValue` |

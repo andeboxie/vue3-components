@@ -234,3 +234,4 @@
 | 0.0.0 | 2026-09-29 | 初始空框架 |
 | 0.1.0 | 2026-09-29 | 按 spec 填充全部章节；实现完成，16/16 测试通过（autosize 3 条 jsdom 限制 skip） |
 | 0.2.0 | 2026-09-29 | P0/P1 修复：`textareaRef` 绑 ref、`maxHeight=Infinity`、E-04 maxRows<minRows 处理、`getRows` computed 用 Math.max、移除 `:autosize` 透传、`modelValue` 改 optional、清理 `window.getComputedStyle` 空格 |
+| 0.3.0 | 2026-09-29 | 重构：抽 `useInputEvents` composable 共享 5 个事件 handler（与 Input 复用）；调用处传 `props` 对象保证 disabled / readonly 响应式访问；删除 `Event.ts` 中死代码 `getFocusValue` |
