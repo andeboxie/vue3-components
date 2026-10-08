@@ -2,7 +2,7 @@
 import type CheckboxGroupProps from '@/components/checkbox/CheckboxGroupProps';
 import type CheckboxEmits from '@/emits/CheckboxEmits';
 import { provide, toRef } from 'vue';
-import { checkboxGroupContextKey} from '@/keys/CheckboxGroupKey';
+import { checkboxGroupContextKey} from '@/keys/CheckboxGroupContextKey';
 
 defineOptions({
     name: "VcCheckboxGroup",

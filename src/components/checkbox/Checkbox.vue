@@ -5,7 +5,7 @@ import type CheckboxEmits from '@/emits/CheckboxEmits';
 import SizeStateEnum from '@/enums/SizeStateEnum';
 import { useCheckEvent } from '@/composables/UseCheckEvent';
 import { computed, inject } from 'vue';
-import { checkboxGroupContextKey } from '@/keys/CheckboxGroupKey';
+import { checkboxGroupContextKey } from '@/keys/CheckboxGroupContextKey';
 import { isNotEmpty } from '@/utils/function';
 
 
