@@ -5,7 +5,8 @@ import type SelectOptionProps from "@/components/select/option/SelectOptionProps
 import type SelectEmits from "@/emits/SelectEmits";
 import { useFormControl } from "@/composables/UseFormControl";
 import VcSelectOption from "@/components/select/option/SelectOption.vue";
-import { computed, ref, onMounted, onUnmounted, useId } from 'vue';
+import { computed, ref, onMounted, onUnmounted, useId, inject } from 'vue';
+import { formItemContextKey } from '@/keys/FormItemContextKey';
 
 defineOptions({
     name: "VcSelect",
@@ -21,12 +22,16 @@ const props = withDefaults(defineProps<SelectProps>(), {
 });
 
 const emit = defineEmits<SelectEmits>();
+// 注入 FormItem 上下文（无 context 时独立工作）
+const formItemContext = inject(formItemContextKey, undefined);
+// 合并禁用：Form disabled 或自身 disabled
+const isDisabled = computed(() => props.disabled || formItemContext?.disabled.value === true);
 const isOpen = ref(false);
 const baseClasses = useFormControl('vc-select',props.size);
 const selectClasses = computed(() => {
     return [
         ...baseClasses.value,
-        {'vc-select--disabled': props.disabled},
+        {'vc-select--disabled': isDisabled.value},
         {'vc-select--clearable': props.clearable},
         {'vc-select--dropdown': isOpen.value},
     ];
@@ -54,11 +59,11 @@ const activeDescendantId = computed(() => {
 
 // B-14/E-04 clearable 且有选中值且未禁用时显示清空按钮
 const showClear = computed(() => {
-    return props.clearable && !props.disabled && hasSelection.value;
+    return props.clearable && !isDisabled.value && hasSelection.value;
 });
 
 const openDropdown = () => {
-    if (props.disabled || isOpen.value) return;
+    if (isDisabled.value || isOpen.value) return;
     isOpen.value = true;
     emit('visible-change', true);
     highlightIndex.value = props.options.findIndex(option => option.value === props.modelValue);
@@ -72,7 +77,7 @@ const closeDropdown = () => {
 
 // B-21 disabled 时点击不展开（jsdom 会绕过原生 disabled，必须 JS 守卫）
 const onControlClick = () => {
-    if (props.disabled) return;
+    if (isDisabled.value) return;
     if (isOpen.value) {
         closeDropdown();
     } else {
@@ -90,6 +95,9 @@ const onOptionClick = (option: SelectOptionProps) => {
     }
     emit('update:modelValue', option.value);
     emit('change', option.value);
+    // 上报表单上下文
+    formItemContext?.setValue(option.value);
+    formItemContext?.markChanged();
     // B-08 选中后自动收起
     closeDropdown();
 };
@@ -98,6 +106,9 @@ const onOptionClick = (option: SelectOptionProps) => {
 const onClear = () => {
     emit('update:modelValue', '');
     emit('clear');
+    // 上报表单上下文
+    formItemContext?.setValue('');
+    formItemContext?.markChanged();
 };
 
 // B-07 点击组件外部收起面板
@@ -122,7 +133,7 @@ const moveHighlight = (step: number) => {
 };
 
 const onKeydown = (e: KeyboardEvent) => {
-    if (props.disabled) return;
+    if (isDisabled.value) return;
     switch (e.key) {
         case 'ArrowDown':
             e.preventDefault();
@@ -184,9 +195,13 @@ onUnmounted(() => {
             :aria-expanded="isOpen"
             :aria-controls="dropdownId"
             :aria-activedescendant="activeDescendantId"
-            :tabindex="disabled ? -1 : 0"
+            :tabindex="isDisabled ? -1 : 0"
+            :id="formItemContext?.controlId"
+            :aria-describedby="formItemContext?.errorId"
+            :aria-invalid="formItemContext?.invalid.value === true ? 'true' : undefined"
             @click="onControlClick"
             @keydown="onKeydown"
+            @blur="formItemContext?.handleBlur()"
         >
             <span :class="hasSelection ? 'vc-select__value' : 'vc-select__placeholder'">{{ selectValue }}</span>
             <slot></slot>
