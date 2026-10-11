@@ -261,8 +261,8 @@ it('T-01: type=primary 时根元素含 vc-button--primary', () => {
 |---|---|---|---|
 | 0 | 环境搭建 | - | 已完成 |
 | 1 | 基础原子 | Button / Icon / Typography | 已完成（51/51 测试通过） |
-| 2 | 表单类 | Input / Textarea / Checkbox / Radio / Switch / Select / Form | spec 已交付，待实现 |
-| 3 | 数据展示 | Tag / Badge / Avatar / Card / Empty / Table / Tooltip | 待生成 |
+| 2 | 表单类 | Input / Textarea / Checkbox / Radio / Switch / Select / Form | 已完成（180/180 测试通过） |
+| 3 | 数据展示 | Tag / Badge / Avatar / Card / Empty / Table / Tooltip | spec 已交付 |
 | 4 | 布局与反馈 | Layout / Container / Grid / Dialog / Drawer / Message / Toast / Loading | 待生成 |
 
 完成阶段 2 后告诉我，我会：
